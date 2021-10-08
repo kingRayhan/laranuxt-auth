@@ -52,6 +52,13 @@
 
       <button class=" w-max text-white bg-blue-500 py-2 px-4">Register</button>
     </form>
+
+    <div class="mt-6">
+      Already have an account?
+      <nuxt-link class=" text-blue-500 underline" :to="{ name: 'auth-login' }"
+        >login now</nuxt-link
+      >
+    </div>
   </div>
 </template>
 
@@ -72,6 +79,7 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      this.errors = {};
       try {
         await this.$axios.$post("api/auth/register", this.form);
 
@@ -82,7 +90,9 @@ export default {
           icon: "success"
         });
       } catch (error) {
-        this.errors = error?.response?.data?.errors;
+        if (error.response.status === 422) {
+          this.errors = error?.response?.data?.errors;
+        }
       }
     }
   }

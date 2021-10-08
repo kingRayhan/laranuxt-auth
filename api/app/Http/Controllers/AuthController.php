@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         if(!auth()->attempt($request->only('email', 'password'))){
-            throw new AuthenticationException();
+            throw new AuthenticationException('Invalid email or password');
         }
 
 
@@ -59,6 +60,6 @@ class AuthController extends Controller
      */
     public function user()
     {
-        return auth()->user();
+        return new UserResource(auth()->user());
     }
 }
